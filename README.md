@@ -1,109 +1,78 @@
 # caddy_ai2_ros2_sim
 
-Paquete de integración para el robot agrícola **Caddy AI2** en **simulación**.  
-Este repositorio es el punto de entrada para lanzar el sistema completo en entorno simulado. Orquesta el simulador elegido, el stack de ros2_control con hardware interfaces simulados, los adaptadores cinemáticos y la visualización en RViz.
+**ROS 2:** Jazzy | **Simulador:** Gazebo Harmonic | **Proyecto:** CERVAREC
 
-**ROS 2:** Jazzy | **Simuladores soportados:** Gazebo Harmonic · MVSim | **Proyecto:** CERVAREC
-
----
-
-## Arquitectura del sistema (simulación)
-
-```
-[Nav2 / Planner  ó  Teleop]
-        │  /cmd_vel  (geometry_msgs/Twist)
-        ▼
-[bicycle_to_ackermann_steering_adapter]   [bicycle_to_ackermann_traction_adapter]
-        │  /forward_command_controller     │  /velocity_controller
-        │  /commands  (Float64MultiArray)  │  /commands  (Float64MultiArray)
-        ▼                                  ▼
-        └──────── ros2_control (mock / sim HW interface) ───────────┘
-                       │  /joint_states
-                       ▼
-              [robot_state_publisher]  →  [RViz2]
-                       │  /tf
-                       ▼
-            ┌──────────────────────┐
-            │  Gazebo Harmonic     │  ó  │  MVSim  │
-            │  (gz_ros2_control)   │     │  (mvsim_node) │
-            └──────────────────────┘
-```
+Paquete de integración para el robot agrícola **Caddy AI2** en simulación. Es el punto de entrada único: contiene el launch principal y agrupa como submódulos git todos los paquetes necesarios para lanzar la simulación completa.
 
 ---
 
-## Repositorios dependientes
+## Paquetes incluidos (submódulos)
 
-| Repositorio | Rama | Rol |
+| Submódulo | Rama | Rol |
 |---|---|---|
-| `caddy_ai2_ros2_description` | `jazzy` | URDF / meshes del robot |
-| `caddy_ai2_ros2_common` | `jazzy` | Launch utils compartidos |
-| `caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter` | `jazzy` | Conversión cinemática → steering |
-| `caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter` | `jazzy` | Conversión cinemática → traction |
-| `caddy_ai2_ros2_gazebo_simulation` | `jazzy` | Mundos y configuración Gazebo |
-| `caddy_ai2_ros2_mvsim_simulation` | `jazzy` | Mundos y configuración MVSim |
-
-> Los drivers de hardware real (`_steering_driver`, `_traction_driver`) **no son necesarios** en simulación pura. El URDF activa el plugin `gz_ros2_control` o el mock hardware interface según el simulador.
-
----
-
-## Política de ramas
-
-| Rama | Propósito |
-|---|---|
-| `jazzy` | Rama estable. Solo se integra código probado. |
-| `feat/<nombre>` | Desarrollo de nuevas funcionalidades. Se abre desde `jazzy` y se integra con PR. Ejemplo: `feat/nav2-integration` |
-| `hw/<nombre>` | Pruebas puntuales sobre hardware real que no son una feature completa. Vida corta. Solo aplica a `caddy_ai2_ros2_robot`, pero se documenta aquí para referencia. |
-
-> **Regla general:** nunca se hace commit directo a `jazzy`. Todo entra por PR desde `feat/`.
+| `caddy_ai2_ros2_description` | `jazzy` | URDF del robot, parámetros físicos, meshes |
+| `caddy_ai2_ros2_gazebo_simulation` | `jazzy` | Gazebo Harmonic: mundos, sensores, bridge, RViz |
+| `caddy_ai2_ros2_sensors_ydlidar_x4` | `jazzy` | Driver + fragmento URDF del YDLidar X4 |
+| `caddy_ai2_ros2_sensors_sick_lms_291` | `jazzy` | Driver + fragmento URDF del SICK LMS291 |
+| `caddy_ai2_ros2_control_sensors_sbg_ig_500n` | `jazzy` | Driver + fragmento URDF de la IMU SBG IG-500N |
+| `caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter` | `jazzy` | Controlador ros2_control — conversión dirección |
+| `caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter` | `jazzy` | Controlador ros2_control — conversión tracción |
+| `caddy_ai2_ros2_robot_description_publisher` | `main` | Publica URDF como topic transient-local |
 
 ---
 
 ## Instalación
 
-### 1. Crear el workspace y clonar los repos necesarios
+### 1. Crear el workspace
 
 ```bash
-mkdir -p ~/ros2_ws/src && cd ~/ros2_ws/src
-
-# Repos de integración
-git clone -b jazzy https://github.com/racarla96/caddy_ai2_ros2_sim.git
-
-# Descripción
-git clone -b jazzy https://github.com/racarla96/caddy_ai2_ros2_description.git
-
-# Librería común
-git clone -b jazzy https://github.com/racarla96/caddy_ai2_ros2_common.git
-
-# Adaptadores cinemáticos
-git clone -b jazzy https://github.com/racarla96/caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter.git
-git clone -b jazzy https://github.com/racarla96/caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter.git
-
-# Simuladores (clonar solo los que se vayan a usar)
-git clone -b jazzy https://github.com/racarla96/caddy_ai2_ros2_gazebo_simulation.git
-git clone -b jazzy https://github.com/racarla96/caddy_ai2_ros2_mvsim_simulation.git
+mkdir -p ~/caddy_ws/src && cd ~/caddy_ws/src
 ```
 
-### 2. Instalar dependencias del sistema
+### 2. Clonar con submódulos
+
+```bash
+git clone --recurse-submodules -b jazzy \
+  https://github.com/racarla96/caddy_ai2_ros2_sim.git
+```
+
+Si ya tienes el repo clonado sin submódulos:
+
+```bash
+git submodule update --init --recursive
+```
+
+### 3. Instalar dependencias del sistema
 
 ```bash
 # ROS 2 control
 sudo apt install ros-jazzy-ros2-control ros-jazzy-ros2-controllers
 
-# Descripción del robot
-sudo apt install ros-jazzy-xacro ros-jazzy-robot-state-publisher ros-jazzy-rviz2
+# Gazebo Harmonic + bridge
+sudo apt install ros-jazzy-gz-ros2-control ros-jazzy-ros-gz-bridge \
+                 ros-jazzy-ros-gz-sim ros-jazzy-ros-gz-interfaces
 
-# Gazebo Harmonic
-sudo apt install ros-jazzy-gz-ros2-control ros-jazzy-ros-gz-bridge
+# Visualización
+sudo apt install ros-jazzy-robot-state-publisher ros-jazzy-rviz2
 
-# MVSim
-sudo apt install ros-jazzy-mvsim
+# Python (templates Jinja2)
+pip install jinja2 pyyaml
 ```
 
-### 3. Compilar
+### 4. Compilar
 
 ```bash
-cd ~/ros2_ws
-colcon build --symlink-install
+cd ~/caddy_ws
+colcon build --packages-select \
+  caddy_ai2_ros2_description \
+  caddy_ai2_ros2_gazebo_simulation \
+  caddy_ai2_ros2_sensors_ydlidar_x4 \
+  caddy_ai2_ros2_sensors_sick_lms_291 \
+  caddy_ai2_ros2_control_sensors_sbg_ig_500n \
+  caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter \
+  caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter \
+  caddy_ai2_ros2_robot_description_publisher \
+  caddy_ai2_ros2_sim
 source install/setup.bash
 ```
 
@@ -111,106 +80,75 @@ source install/setup.bash
 
 ## Uso
 
-### Lanzar con Gazebo Harmonic
+### Simulación por defecto (world plano)
 
 ```bash
 ros2 launch caddy_ai2_ros2_sim sim_gazebo.launch.py
 ```
 
-### Lanzar con MVSim
+### World baylands (PX4, requiere internet la primera vez)
 
 ```bash
-ros2 launch caddy_ai2_ros2_sim sim_mvsim.launch.py
+ros2 launch caddy_ai2_ros2_sim sim_gazebo.launch.py \
+  world:=baylands.sdf
 ```
 
-### Argumentos comunes
+### Argumentos disponibles
 
 | Argumento | Default | Descripción |
 |---|---|---|
-| `use_rviz` | `true` | Lanzar RViz con configuración predefinida |
-| `world` | `empty` | Mundo a cargar (vacío, campo, almacén…) |
-| `use_nav2` | `false` | Lanzar stack de navegación Nav2 |
-| `use_teleop` | `false` | Lanzar control por teclado |
+| `world` | `caddy_ai2_world.sdf` | Fichero SDF (relativo) o ruta absoluta |
+| `robot_name` | `caddy_ai2` | Nombre del modelo en Gazebo |
+| `namespace` | `` | Namespace ROS 2 |
+| `prefix` | `` | Prefijo de TF frames |
+| `x`, `y`, `z` | `0.0` | Posición de spawn (m) |
+| `yaw` | `0.0` | Orientación de spawn (rad) |
 
-### Teleoperación manual
-
-```bash
-# En otra terminal
-ros2 run teleop_twist_keyboard teleop_twist_keyboard
-```
-
-### Verificar controladores activos
+### Control manual
 
 ```bash
-ros2 control list_controllers
+ros2 topic pub /bicycle_steering_controller/reference geometry_msgs/msg/TwistStamped "{
+  header: {frame_id: 'base_link'},
+  twist: {linear: {x: 1.0}, angular: {z: 0.3}}
+}"
 ```
 
 ---
 
-## TODO
+## Arquitectura del sistema
 
-### Rama estable (`jazzy`)
-
-#### Unificación de repositorios
-- [ ] Alinear todas las ramas de los repos dependientes a `jazzy`
-  - [ ] `caddy_ai2_ros2_description`: está en `jazzy-dev` → renombrar/mergear a `jazzy`
-  - [ ] `caddy_ai2_ros2_mvsim_simulation`: está en `main` → migrar a `jazzy`
-  - [ ] `caddy_ai2_ros2_gazebo_simulation`: verificar rama actual y alinear a `jazzy`
-- [ ] Actualizar el README de `caddy_ai2_ros2_description` para que refleje la estructura multirepo actual
-- [ ] Mover los meshes duplicados de `caddy_ai2_ros2_mvsim_simulation/meshes/` a `caddy_ai2_ros2_description/meshes/` y actualizar referencias
-
-#### Launch system
-- [ ] Crear `launch/sim_gazebo.launch.py` — launch completo con Gazebo Harmonic
-  - [ ] Lanzar el mundo seleccionado por parámetro
-  - [ ] Lanzar `robot_state_publisher` con URDF de `_description` + plugin `gz_ros2_control`
-  - [ ] Lanzar `controller_manager` con mock/sim hardware interfaces
-  - [ ] Lanzar los dos adaptadores bicycle→ackermann
-  - [ ] Lanzar RViz (condicional a `use_rviz`)
-- [ ] Crear `launch/sim_mvsim.launch.py` — launch completo con MVSim
-  - [ ] Integrar el launch existente de `caddy_ai2_ros2_mvsim_simulation`
-  - [ ] Unificar interfaz de argumentos con el launch de Gazebo
-- [ ] Crear `launch/sim.launch.py` — wrapper que selecciona simulador mediante argumento `simulator:=gazebo|mvsim`
-
-#### Configuración centralizada
-- [ ] Crear `config/controllers_sim.yaml` con los controladores para simulación
-- [ ] Crear `config/rviz/sim.rviz` con configuración de RViz para simulación
-- [ ] Definir al menos dos mundos: vacío y un campo agrícola básico (surcos)
-
-#### Integración con Nav2
-- [ ] Definir los parámetros de Nav2 adaptados al modelo cinemático Ackermann del Caddy AI2
-- [ ] Añadir `launch/nav2.launch.py` que lanza Nav2 sobre la simulación
-- [ ] Verificar la integración del `AckermannDriveController` o del `BicycleSteeringController` de ros2_controllers como alternativa a los adaptadores propios
-
-#### Paridad simulación ↔ hardware real
-- [ ] Verificar que los nombres de topics y TF frames son idénticos entre `_sim` y `_robot`
-- [ ] Verificar que el URDF usado en simulación y en hardware real es el mismo (un solo fichero en `_description`, sin copias)
-- [ ] Añadir test de humo: script que lanza la simulación, publica un `/cmd_vel` y verifica que llegan `/joint_states`
-
-#### Documentación
-- [ ] Añadir diagrama de topics y nodos (generado con `rqt_graph`) al README
-- [ ] Documentar las diferencias de comportamiento entre Gazebo y MVSim para este modelo
-- [ ] Añadir instrucciones para crear un mundo personalizado
+```
+[Teleop / Nav2 / Planner]
+        │  /bicycle_steering_controller/reference  (TwistStamped)
+        ▼
+[bicycle_to_ackermann_steering_adapter]   [bicycle_to_ackermann_traction_adapter]
+        │  steering joints/position              │  drive joints/velocity
+        ▼                                        ▼
+        └──────── gz_ros2_control (GazeboSimSystem) ──────────┘
+                       │  /joint_states
+                       ▼
+          [robot_state_publisher]  →  /tf  →  [RViz2]
+                       │
+            ┌──────────────────────────┐
+            │  Gazebo Harmonic          │
+            │  ├─ Sensors: IMU, LIDARs, NavSat (×3), GPS
+            │  └─ OdometryPublisher (ground truth 50 Hz)
+            └──────────────────────────┘
+                       │  ros_gz_bridge
+                       ▼
+        /imu, /sick_lms_291/scan, /ydlidar_x4/scan
+        /navsat, /navsat/base/fix, /navsat/front_axle/fix, /navsat/rear_axle/fix
+        /ground_truth/odometry
+```
 
 ---
 
-## Estructura del paquete (objetivo)
+## Actualizar submódulos al último commit de cada rama
 
-```
-caddy_ai2_ros2_sim/
-├── config/
-│   ├── controllers_sim.yaml    # Controladores para simulación
-│   └── rviz/
-│       └── sim.rviz            # Configuración de RViz
-├── launch/
-│   ├── sim.launch.py           # Wrapper — selecciona simulador por argumento
-│   ├── sim_gazebo.launch.py    # Launch completo con Gazebo Harmonic
-│   └── sim_mvsim.launch.py    # Launch completo con MVSim
-├── worlds/
-│   ├── empty.world             # Mundo vacío
-│   └── field.world             # Campo agrícola básico
-├── CMakeLists.txt
-├── package.xml
-└── README.md
+```bash
+git submodule update --remote --merge
+git add .
+git commit -m "Update submodules to latest"
 ```
 
 ---
