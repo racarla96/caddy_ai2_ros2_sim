@@ -1,32 +1,32 @@
 [submodule "caddy_ai2_ros2_description"]
-	path = caddy_ai2_ros2_description
+	path = src/caddy_ai2_ros2_description
 	url = https://github.com/racarla96/caddy_ai2_ros2_description.git
 	branch = jazzy
 [submodule "caddy_ai2_ros2_gazebo_simulation"]
-	path = caddy_ai2_ros2_gazebo_simulation
+	path = src/caddy_ai2_ros2_gazebo_simulation
 	url = https://github.com/racarla96/caddy_ai2_ros2_gazebo_simulation.git
 	branch = jazzy
 [submodule "caddy_ai2_ros2_sensors_ydlidar_x4"]
-	path = caddy_ai2_ros2_sensors_ydlidar_x4
+	path = src/caddy_ai2_ros2_sensors_ydlidar_x4
 	url = https://github.com/racarla96/caddy_ai2_ros2_sensors_ydlidar_X4.git
 	branch = jazzy
 [submodule "caddy_ai2_ros2_sensors_sick_lms_291"]
-	path = caddy_ai2_ros2_sensors_sick_lms_291
+	path = src/caddy_ai2_ros2_sensors_sick_lms_291
 	url = https://github.com/racarla96/caddy_ai2_ros2_sensors_sick_lms_291.git
 	branch = jazzy
 [submodule "caddy_ai2_ros2_control_sensors_sbg_ig_500n"]
-	path = caddy_ai2_ros2_control_sensors_sbg_ig_500n
+	path = src/caddy_ai2_ros2_control_sensors_sbg_ig_500n
 	url = https://github.com/racarla96/caddy_ai2_ros2_control_sensors_sbg_ig_500n.git
 	branch = jazzy
 [submodule "caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter"]
-	path = caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter
+	path = src/caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter
 	url = https://github.com/racarla96/caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter.git
 	branch = jazzy
 [submodule "caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter"]
-	path = caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter
+	path = src/caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter
 	url = https://github.com/racarla96/caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter.git
 	branch = jazzy
 [submodule "caddy_ai2_ros2_robot_description_publisher"]
 	branch = jazzy
-	path = caddy_ai2_ros2_robot_description_publisher
+	path = src/caddy_ai2_ros2_robot_description_publisher
 	url = https://github.com/racarla96/caddy_ai2_ros2_robot_description_publisher.git

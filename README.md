@@ -17,28 +17,25 @@ Paquete de integración para el robot agrícola **Caddy AI2** en simulación. Es
 | `caddy_ai2_ros2_control_sensors_sbg_ig_500n` | `jazzy` | Driver + fragmento URDF de la IMU SBG IG-500N |
 | `caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter` | `jazzy` | Controlador ros2_control — conversión dirección |
 | `caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter` | `jazzy` | Controlador ros2_control — conversión tracción |
-| `caddy_ai2_ros2_robot_description_publisher` | `main` | Publica URDF como topic transient-local |
+| `caddy_ai2_ros2_robot_description_publisher` | `jazzy` | Publica URDF como topic transient-local |
 
 ---
 
 ## Instalación
 
-### 1. Crear el workspace
+### 1. Clonar como workspace
 
-```bash
-mkdir -p ~/caddy_ws/src && cd ~/caddy_ws/src
-```
-
-### 2. Clonar con submódulos
+Este repo ES el workspace — se clona directamente en la carpeta raíz, no dentro de `src/`:
 
 ```bash
 git clone --recurse-submodules -b jazzy \
-  https://github.com/racarla96/caddy_ai2_ros2_sim.git
+  https://github.com/racarla96/caddy_ai2_ros2_sim.git ~/caddy_ws
 ```
 
 Si ya tienes el repo clonado sin submódulos:
 
 ```bash
+cd ~/caddy_ws
 git submodule update --init --recursive
 ```
 
