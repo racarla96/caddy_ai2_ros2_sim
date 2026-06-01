@@ -13,7 +13,7 @@ Paquete de integración para el robot agrícola **Caddy AI2** en simulación. Es
 | `caddy_ai2_ros2_description` | `jazzy` | URDF del robot, parámetros físicos, meshes |
 | `caddy_ai2_ros2_gazebo_simulation` | `jazzy` | Gazebo Harmonic: mundos, sensores, bridge, RViz |
 | `caddy_ai2_ros2_sensors_ydlidar_x4` | `jazzy` | Driver + fragmento URDF del YDLidar X4 |
-| `caddy_ai2_ros2_sensors_sick_lms_291` | `jazzy` | Driver + fragmento URDF del SICK LMS291 |
+| `caddy_ai2_ros2_sensors_lidar_sick_lms_291` | `jazzy` | Driver + fragmento URDF del SICK LMS291 |
 | `caddy_ai2_ros2_control_sensors_sbg_ig_500n` | `jazzy` | Driver + fragmento URDF de la IMU SBG IG-500N |
 | `caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter` | `jazzy` | Controlador ros2_control — conversión dirección |
 | `caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter` | `jazzy` | Controlador ros2_control — conversión tracción |
@@ -64,7 +64,7 @@ colcon build --packages-select \
   caddy_ai2_ros2_description \
   caddy_ai2_ros2_gazebo_simulation \
   caddy_ai2_ros2_sensors_ydlidar_x4 \
-  caddy_ai2_ros2_sensors_sick_lms_291 \
+  caddy_ai2_ros2_sensors_lidar_sick_lms_291 \
   caddy_ai2_ros2_control_sensors_sbg_ig_500n \
   caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter \
   caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter \
