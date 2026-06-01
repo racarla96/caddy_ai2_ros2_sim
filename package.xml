@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>caddy_ai2_ros2_sim</name>
+  <version>0.1.0</version>
+  <description>
+    Integration meta-package for the Caddy AI2 agricultural robot in simulation.
+    Entry point for launching the full system under Gazebo Harmonic or MVSim.
+  </description>
+  <maintainer email="rafapenya96@gmail.com">Rafael Carbonell Lázaro</maintainer>
+  <license>CC-BY-4.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Robot description and shared parameters -->
+  <exec_depend>caddy_ai2_ros2_description</exec_depend>
+
+  <!-- Kinematic adapters (simulation only — replaced by HW drivers on real robot) -->
+  <exec_depend>caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter</exec_depend>
+  <exec_depend>caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter</exec_depend>
+
+  <!-- Simulator backends -->
+  <exec_depend>caddy_ai2_ros2_gazebo_simulation</exec_depend>
+  <exec_depend>caddy_ai2_ros2_mvsim_simulation</exec_depend>
+
+  <!-- Sensors -->
+  <exec_depend>caddy_ai2_ros2_sensors_lidar_sick_lms_291</exec_depend>
+
+  <!-- Ground truth odometry (Gazebo) -->
+  <exec_depend>gz_ground_truth</exec_depend>
+
+  <!-- Future: bicycle controller (will become common to sim + robot) -->
+  <!-- <exec_depend>caddy_ai2_ros2_control_system_bicycle_controller</exec_depend> -->
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
