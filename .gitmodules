@@ -30,3 +30,7 @@
 	branch = jazzy
 	path = src/caddy_ai2_ros2_robot_description_publisher
 	url = git@github.com:racarla96/caddy_ai2_ros2_robot_description_publisher.git
+[submodule "src/caddy_ai2_ros2_localization"]
+	path = src/caddy_ai2_ros2_localization
+	url = git@github.com:racarla96/caddy_ai2_ros2_localization.git
+	branch = main

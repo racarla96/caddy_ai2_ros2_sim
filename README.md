@@ -18,6 +18,7 @@ Paquete de integración para el robot agrícola **Caddy AI2** en simulación. Es
 | `caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter` | `jazzy` | Controlador ros2_control — conversión dirección |
 | `caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter` | `jazzy` | Controlador ros2_control — conversión tracción |
 | `caddy_ai2_ros2_robot_description_publisher` | `jazzy` | Publica URDF como topic transient-local |
+| `caddy_ai2_ros2_localization` | `main` | EKF (robot_localization): fusión odometría + IMU |
 
 ---
 
@@ -69,6 +70,7 @@ colcon build --packages-select \
   caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter \
   caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter \
   caddy_ai2_ros2_robot_description_publisher \
+  caddy_ai2_ros2_localization \
   caddy_ai2_ros2_sim
 source install/setup.bash
 ```
@@ -83,13 +85,6 @@ source install/setup.bash
 ros2 launch caddy_ai2_ros2_sim sim_gazebo.launch.py
 ```
 
-### World baylands (PX4, requiere internet la primera vez)
-
-```bash
-ros2 launch caddy_ai2_ros2_sim sim_gazebo.launch.py \
-  world:=baylands.sdf
-```
-
 ### Argumentos disponibles
 
 | Argumento | Default | Descripción |
@@ -100,6 +95,7 @@ ros2 launch caddy_ai2_ros2_sim sim_gazebo.launch.py \
 | `prefix` | `` | Prefijo de TF frames |
 | `x`, `y`, `z` | `0.0` | Posición de spawn (m) |
 | `yaw` | `0.0` | Orientación de spawn (rad) |
+| `use_localization` | `true` | Lanza el nodo EKF (robot_localization) |
 
 ### Control manual
 
