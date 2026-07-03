@@ -34,3 +34,7 @@
 	path = src/caddy_ai2_ros2_localization
 	url = git@github.com:racarla96/caddy_ai2_ros2_localization.git
 	branch = main
+[submodule "src/caddy_ai2_ros2_navigation"]
+	path = src/caddy_ai2_ros2_navigation
+	url = git@github.com:racarla96/caddy_ai2_ros2_navigation.git
+	branch = main
