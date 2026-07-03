@@ -19,6 +19,7 @@ Paquete de integración para el robot agrícola **Caddy AI2** en simulación. Es
 | `caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter` | `jazzy` | Controlador ros2_control — conversión tracción |
 | `caddy_ai2_ros2_robot_description_publisher` | `jazzy` | Publica URDF como topic transient-local |
 | `caddy_ai2_ros2_localization` | `main` | EKF (robot_localization): fusión odometría + IMU |
+| `caddy_ai2_ros2_navigation` | `main` | Nav2 stack: SLAM, AMCL, SmacPlannerHybrid, MPPI (Ackermann) |
 
 ---
 
@@ -71,6 +72,7 @@ colcon build --packages-select \
   caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter \
   caddy_ai2_ros2_robot_description_publisher \
   caddy_ai2_ros2_localization \
+  caddy_ai2_ros2_navigation \
   caddy_ai2_ros2_sim
 source install/setup.bash
 ```
@@ -96,6 +98,29 @@ ros2 launch caddy_ai2_ros2_sim sim_gazebo.launch.py
 | `x`, `y`, `z` | `0.0` | Posición de spawn (m) |
 | `yaw` | `0.0` | Orientación de spawn (rad) |
 | `use_localization` | `true` | Lanza el nodo EKF (robot_localization) |
+
+### SLAM (construir mapa con el robot)
+
+```bash
+# Instalar twist_stamper si aún no está:
+sudo apt install ros-jazzy-twist-stamper
+
+ros2 launch caddy_ai2_ros2_navigation slam.launch.py
+# Teleoperar y guardar el mapa cuando esté completo:
+ros2 service call /caddy_ai2/slam_toolbox/save_map \
+  slam_toolbox/srv/SaveMap "{name: {data: 'maps/caddy_ai2_world'}}"
+```
+
+### Navegación autónoma (Nav2)
+
+```bash
+# Con mapa pre-construido:
+ros2 launch caddy_ai2_ros2_navigation navigation.launch.py \
+  map:=/path/to/maps/caddy_ai2_world.yaml
+
+# En modo SLAM (mapeo + navegación simultáneos):
+ros2 launch caddy_ai2_ros2_navigation navigation.launch.py use_slam:=true
+```
 
 ### Control manual
 
