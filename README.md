@@ -118,19 +118,28 @@ ros2 topic pub /bicycle_steering_controller/reference geometry_msgs/msg/TwistSta
         │  steering joints/position              │  drive joints/velocity
         ▼                                        ▼
         └──────── gz_ros2_control (GazeboSimSystem) ──────────┘
-                       │  /joint_states
-                       ▼
-          [robot_state_publisher]  →  /tf  →  [RViz2]
-                       │
+                       │  /joint_states            │  /bicycle_steering_controller/odometry
+                       ▼                           ▼
+          [robot_state_publisher]          [ekf_filter_node]  (use_localization=true)
+             /tf (joints)                    /tf  odom → base_footprint
+                       │                           │
+                       └───────────────────────────┘
+                                       ▼
+                                    [RViz2]
             ┌──────────────────────────┐
             │  Gazebo Harmonic          │
-            │  ├─ Sensors: IMU, LIDARs, NavSat (×3), GPS
+            │  ├─ IMU SBG IG-500N       │
+            │  ├─ SICK LMS291, YDLidar X4
+            │  ├─ NavSat (×3): base/CG, front_axle, rear_axle
             │  └─ OdometryPublisher (ground truth 50 Hz)
             └──────────────────────────┘
                        │  ros_gz_bridge
                        ▼
-        /imu, /sick_lms_291/scan, /ydlidar_x4/scan
-        /navsat, /navsat/base/fix, /navsat/front_axle/fix, /navsat/rear_axle/fix
+        /sbg_ig500n/imu
+        /sick_lms_291/scan, /ydlidar_x4/scan
+        /sbg_ig500n/navsat
+        /sbg_ig500n/navsat/base/fix  (frame: cg_link)
+        /sbg_ig500n/navsat/front_axle/fix, /sbg_ig500n/navsat/rear_axle/fix
         /ground_truth/odometry
 ```
 
