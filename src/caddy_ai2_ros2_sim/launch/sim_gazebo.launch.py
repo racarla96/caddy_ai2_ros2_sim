@@ -14,13 +14,13 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('world',      default_value='caddy_ai2_world.sdf'),
         DeclareLaunchArgument('robot_name', default_value='caddy_ai2'),
-        DeclareLaunchArgument('namespace',  default_value=''),
+        DeclareLaunchArgument('namespace',  default_value='caddy_ai2'),
         DeclareLaunchArgument('prefix',     default_value=''),
         DeclareLaunchArgument('x',          default_value='0.0'),
         DeclareLaunchArgument('y',          default_value='0.0'),
         DeclareLaunchArgument('z',          default_value='0.0'),
         DeclareLaunchArgument('yaw',        default_value='0.0'),
-        DeclareLaunchArgument('use_localization', default_value='true',
+        DeclareLaunchArgument('use_localization', default_value='false',
                               description='Launch EKF localization node'),
 
         IncludeLaunchDescription(
