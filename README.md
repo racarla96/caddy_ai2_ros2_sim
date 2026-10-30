@@ -19,7 +19,7 @@ Paquete de integración para el robot agrícola **Caddy AI2** en simulación. Es
 | `caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter` | `jazzy` | Controlador ros2_control — conversión tracción |
 | `caddy_ai2_ros2_robot_description_publisher` | `jazzy` | Publica URDF como topic transient-local |
 | `caddy_ai2_ros2_localization` | `main` | EKF (robot_localization): fusión odometría + IMU |
-| `caddy_ai2_ros2_navigation` | `main` | Nav2 stack: SLAM, AMCL, SmacPlannerHybrid, MPPI (Ackermann) |
+| `caddy_ai2_ros2_navigation` | `main` | EasyNav: SLAM (slam_toolbox), AMCL, A*, Regulated Pure Pursuit (Ackermann) |
 
 ---
 
@@ -84,20 +84,33 @@ source install/setup.bash
 ### Simulación por defecto (world plano)
 
 ```bash
-ros2 launch caddy_ai2_ros2_sim sim_gazebo.launch.py
+ros2 launch caddy_ai2_ros2_sim sim.launch.py
 ```
 
 ### Argumentos disponibles
 
+`sim.launch.py` es el único launch del paquete `caddy_ai2_ros2_sim`.
+
 | Argumento | Default | Descripción |
 |---|---|---|
-| `world` | `caddy_ai2_world.sdf` | Fichero SDF (relativo) o ruta absoluta |
+| `world` | `caddy_ai2_world.sdf` | Mundo SDF de `caddy_ai2_ros2_gazebo_simulation/description/world` (relativo) o ruta absoluta |
 | `robot_name` | `caddy_ai2` | Nombre del modelo en Gazebo |
-| `namespace` | `` | Namespace ROS 2 |
+| `namespace` | `caddy_ai2` | Namespace ROS 2 |
 | `prefix` | `` | Prefijo de TF frames |
-| `x`, `y`, `z` | `0.0` | Posición de spawn (m) |
+| `x`, `y`, `z` | `0.0` | Posición de spawn (m). En el parking, (0, 0) es la planta baja |
 | `yaw` | `0.0` | Orientación de spawn (rad) |
-| `use_localization` | `true` | Lanza el nodo EKF (robot_localization) |
+| `use_localization` | `true` | EKF (`odom → base_footprint`). EasyNav lo necesita |
+| `use_rviz` | `true` | Abre RViz (se ignora con `headless:=true`) |
+| `headless` | `false` | Solo servidor de Gazebo, renderizado EGL, sin GUI ni pantalla |
+| `nav` | `none` | EasyNav: `none`, `2d` (costmap) o `3d` (NavMap + Helios) |
+| `remote_viz` | `false` | Publica la nube del Helios submuestreada para un RViz remoto |
+
+```bash
+# Parking de 3 plantas con navegación 3D en un servidor sin pantalla
+ros2 launch caddy_ai2_ros2_sim sim.launch.py world:=parking_garage.sdf headless:=true nav:=3d
+```
+
+Vídeos de demostración desde Gazebo sin GUI: ver [`tools/`](src/caddy_ai2_ros2_sim/tools/README.md).
 
 ### SLAM (construir mapa con el robot)
 
@@ -111,15 +124,15 @@ ros2 service call /caddy_ai2/slam_toolbox/save_map \
   slam_toolbox/srv/SaveMap "{name: {data: 'maps/caddy_ai2_world'}}"
 ```
 
-### Navegación autónoma (Nav2)
+### Navegación autónoma (EasyNav)
 
 ```bash
-# Con mapa pre-construido:
-ros2 launch caddy_ai2_ros2_navigation navigation.launch.py \
-  map:=/path/to/maps/caddy_ai2_world.yaml
+# Con el mapa por defecto (maps/navigation_test.yaml del paquete de navegación):
+ros2 launch caddy_ai2_ros2_navigation navigation.launch.py
 
-# En modo SLAM (mapeo + navegación simultáneos):
-ros2 launch caddy_ai2_ros2_navigation navigation.launch.py use_slam:=true
+# Con otro mapa (ruta relativa al share de un paquete):
+ros2 launch caddy_ai2_ros2_navigation navigation.launch.py \
+  map_package:=my_maps_pkg map_file:=maps/my_map.yaml
 ```
 
 ### Control manual
@@ -136,7 +149,7 @@ ros2 topic pub /bicycle_steering_controller/reference geometry_msgs/msg/TwistSta
 ## Arquitectura del sistema
 
 ```
-[Teleop / Nav2 / Planner]
+[Teleop / EasyNav / Planner]
         │  /bicycle_steering_controller/reference  (TwistStamped)
         ▼
 [bicycle_to_ackermann_steering_adapter]   [bicycle_to_ackermann_traction_adapter]

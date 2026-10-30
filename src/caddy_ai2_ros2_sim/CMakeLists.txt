@@ -8,8 +8,9 @@ project(caddy_ai2_ros2_sim)
 find_package(ament_cmake REQUIRED)
 
 install(
-  DIRECTORY launch config
+  DIRECTORY launch tools
   DESTINATION share/${PROJECT_NAME}
+  USE_SOURCE_PERMISSIONS
 )
 
 ament_package()

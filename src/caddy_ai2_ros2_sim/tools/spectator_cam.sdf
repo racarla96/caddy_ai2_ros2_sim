@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!-- Static spectator camera, spawned at runtime for demo videos. Looks +y at the Caddy's aisle. -->
+<sdf version="1.9">
+  <model name="spectator_cam">
+    <static>true</static>
+    <pose>3.0 -7.5 1.6 0 0.12 1.5708</pose>
+    <link name="link">
+      <sensor name="spectator" type="camera">
+        <topic>/spectator/image</topic>
+        <update_rate>20</update_rate>
+        <always_on>true</always_on>
+        <camera>
+          <horizontal_fov>1.45</horizontal_fov>
+          <image><width>1280</width><height>720</height><format>R8G8B8</format></image>
+          <clip><near>0.1</near><far>120</far></clip>
+        </camera>
+      </sensor>
+    </link>
+  </model>
+</sdf>

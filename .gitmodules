@@ -38,3 +38,7 @@
 	path = src/caddy_ai2_ros2_navigation
 	url = git@github.com:racarla96/caddy_ai2_ros2_navigation.git
 	branch = main
+[submodule "src/caddy_ai2_ros2_sensors_rs_helios_5515"]
+	path = src/caddy_ai2_ros2_sensors_rs_helios_5515
+	url = git@github.com:racarla96/caddy_ai2_ros2_sensors_rs_helios_5515.git
+	branch = main

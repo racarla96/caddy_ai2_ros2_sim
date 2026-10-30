@@ -5,7 +5,7 @@
   <version>0.1.0</version>
   <description>
     Integration meta-package for the Caddy AI2 agricultural robot in simulation.
-    Entry point for launching the full system under Gazebo Harmonic or MVSim.
+    Entry point: sim.launch.py starts Gazebo Harmonic, the robot, the EKF and, optionally, EasyNav.
   </description>
   <maintainer email="rafapenya96@gmail.com">Rafael Carbonell Lázaro</maintainer>
   <license>CC-BY-4.0</license>
@@ -14,23 +14,23 @@
 
   <!-- Robot description and shared parameters -->
   <exec_depend>caddy_ai2_ros2_description</exec_depend>
+  <exec_depend>caddy_ai2_ros2_robot_description_publisher</exec_depend>
 
   <!-- Kinematic adapters (simulation only — replaced by HW drivers on real robot) -->
   <exec_depend>caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter</exec_depend>
   <exec_depend>caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter</exec_depend>
 
-  <!-- Simulator backends -->
+  <!-- Simulator backend -->
   <exec_depend>caddy_ai2_ros2_gazebo_simulation</exec_depend>
-  <exec_depend>caddy_ai2_ros2_mvsim_simulation</exec_depend>
 
-  <!-- Sensors -->
+  <!-- Sensors on the robot (see caddy_ai2_ros2_description/bringup/config/robot_params.yaml) -->
+  <exec_depend>caddy_ai2_ros2_control_sensors_sbg_ig_500n</exec_depend>
   <exec_depend>caddy_ai2_ros2_sensors_lidar_sick_lms_291</exec_depend>
+  <exec_depend>caddy_ai2_ros2_sensors_rs_helios_5515</exec_depend>
 
-  <!-- Ground truth odometry (Gazebo) -->
-  <exec_depend>gz_ground_truth</exec_depend>
-
-  <!-- Future: bicycle controller (will become common to sim + robot) -->
-  <!-- <exec_depend>caddy_ai2_ros2_control_system_bicycle_controller</exec_depend> -->
+  <!-- EKF (odom -> base_footprint) and EasyNav navigation, started by sim.launch.py -->
+  <exec_depend>caddy_ai2_ros2_localization</exec_depend>
+  <exec_depend>caddy_ai2_ros2_navigation</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
