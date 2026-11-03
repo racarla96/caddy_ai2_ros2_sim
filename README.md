@@ -15,6 +15,7 @@ Paquete de integración para el robot agrícola **Caddy AI2** en simulación. Es
 | `caddy_ai2_ros2_sensors_ydlidar_x4` | `jazzy` | Driver + fragmento URDF del YDLidar X4 |
 | `caddy_ai2_ros2_sensors_lidar_sick_lms_291` | `jazzy` | Driver + fragmento URDF del SICK LMS291 |
 | `caddy_ai2_ros2_control_sensors_sbg_ig_500n` | `jazzy` | Driver + fragmento URDF de la IMU SBG IG-500N |
+| `caddy_ai2_ros2_camera_zed_2i` | `main` | Cámaras ZED 2i: fragmento URDF + sensor Gazebo `rgbd_camera` + launch de `zed-ros2-wrapper` |
 | `caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter` | `jazzy` | Controlador ros2_control — conversión dirección |
 | `caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter` | `jazzy` | Controlador ros2_control — conversión tracción |
 | `caddy_ai2_ros2_robot_description_publisher` | `jazzy` | Publica URDF como topic transient-local |
@@ -68,6 +69,7 @@ colcon build --packages-select \
   caddy_ai2_ros2_sensors_ydlidar_x4 \
   caddy_ai2_ros2_sensors_lidar_sick_lms_291 \
   caddy_ai2_ros2_control_sensors_sbg_ig_500n \
+  caddy_ai2_ros2_camera_zed_2i \
   caddy_ai2_ros2_bicycle_to_ackermann_steering_adapter \
   caddy_ai2_ros2_bicycle_to_ackermann_traction_adapter \
   caddy_ai2_ros2_robot_description_publisher \
@@ -134,6 +136,19 @@ ros2 launch caddy_ai2_ros2_navigation navigation.launch.py
 ros2 launch caddy_ai2_ros2_navigation navigation.launch.py \
   map_package:=my_maps_pkg map_file:=maps/my_map.yaml
 ```
+
+### Cámaras ZED 2i (estudio de disposición)
+
+Hay dos disposiciones definidas en `caddy_ai2_ros2_description/bringup/config/robot_params.yaml`.
+Se activa **una sola** con `enabled: true` (la otra pareja en `false`) y se vuelve a lanzar la simulación:
+
+| Disposición | Cámaras | Cobertura horizontal |
+|---|---|---|
+| A (por defecto) | `zed_2i_left`, `zed_2i_right`: delanteras, en los extremos, yaw ±40° hacia fuera | 190°, con 30° de solape central |
+| B | `zed_2i_front`, `zed_2i_rear`: centradas, una delante y otra detrás | 2 × 110°, sin solape; 2 × 70° ciegos en los laterales |
+
+Topics por cámara: `/<namespace>/<cámara>/zed_node/left/color/rect/image`, `.../depth/depth_registered`
+y `.../point_cloud/cloud_registered`. Las poses son provisionales hasta medir la barra superior.
 
 ### Control manual
 
