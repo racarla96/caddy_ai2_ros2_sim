@@ -2,7 +2,7 @@
 
 **ROS 2:** Jazzy | **Simulador:** Gazebo Harmonic | **Proyecto:** CERVAREC
 
-Paquete de integración para el robot agrícola **Caddy AI2** en simulación. Es el punto de entrada único: contiene el launch principal y agrupa como submódulos git todos los paquetes necesarios para lanzar la simulación completa.
+Paquete de integración para el carrito de golf eléctrico **Caddy AI2**, plataforma de pruebas de vehículos, en simulación. Es el punto de entrada único: contiene el launch principal y agrupa como submódulos git todos los paquetes necesarios para lanzar la simulación completa.
 
 ---
 
