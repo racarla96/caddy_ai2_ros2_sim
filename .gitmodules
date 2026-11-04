@@ -50,3 +50,10 @@
 	path = src/caddy_ai2_ros2_imu_vectornav_vn100
 	url = git@github.com:racarla96/caddy_ai2_ros2_imu_vectornav_vn100.git
 	branch = jazzy
+[submodule "src/caddy_ai2_ros2_mvsim_simulation"]
+	path = src/caddy_ai2_ros2_mvsim_simulation
+	url = git@github.com:racarla96/caddy_ai2_ros2_mvsim_simulation.git
+	branch = jazzy
+[submodule "src/mvsim"]
+	path = src/mvsim
+	url = https://github.com/MRPT/mvsim.git

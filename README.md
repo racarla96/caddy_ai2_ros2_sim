@@ -21,6 +21,8 @@ Paquete de integración para el carrito de golf eléctrico **Caddy AI2**, plataf
 | `caddy_ai2_ros2_robot_description_publisher` | `jazzy` | Publica URDF como topic transient-local |
 | `caddy_ai2_ros2_localization` | `main` | EKF (robot_localization): fusión odometría + IMU |
 | `caddy_ai2_ros2_navigation` | `main` | EasyNav: SLAM (slam_toolbox), AMCL, A*, Regulated Pure Pursuit (Ackermann) |
+| `caddy_ai2_ros2_mvsim_simulation` | `jazzy` | Simulación alternativa con MVSim (planta baja del parking, física 2D), generada desde `robot_params.yaml` |
+| `mvsim` | `2.0.0` (etiqueta) | [MVSim](https://github.com/MRPT/mvsim) de MRPT, sin modificar. La 2.0.0 aún no está en `apt` (ahí hay la 1.5.0); se compila con colcon junto al resto |
 
 ---
 
